@@ -9,10 +9,11 @@
     <%= stylesheet_pack_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
   </head>
-  <body>
+  <body class="d-flex flex-column vh-100">
     <%= render 'layouts/header' %>
       <main>
         <p id="notice"><%= notice %></p>
+        <%= render 'devise/sessions/new' %>
       </main>
     <%= render 'layouts/footer' %>
   </body>
