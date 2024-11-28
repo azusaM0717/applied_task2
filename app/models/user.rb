@@ -9,14 +9,15 @@ class User < ApplicationRecord
   has_many :book_comments, dependent: :destroy
   has_one_attached :profile_image
   
-  # フォローしている
-  has_many :active_relationships, class_name:"Relationship", foreign_key:"follower_id", dependent: :destroy
-  # フォローされている
-  has_many :passive_relationships, class_name:"Relationship", foreign_key:"followed_id", dependent: :destroy
-  # フォローしているユーザー
-  has_many :followings, through: :active_relationships, source: :followed
-  # フォロワー
-  has_many :followers, through: :passive_relationships, source: :follower
+  # 自分がフォローされる（被フォロー）側の関係性
+  has_many :reverse_of_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
+  # 被フォロー関係を通じて参照→自分をフォローしている人
+  has_many :followers, through: :reverse_of_relationships, source: :follower
+  
+  # 自分がフォローする（与フォロー）側の関係性
+  has_many :relationships, class_name: "Relationship", foreign_key: "follower_id", dependent: :destroy
+  # 与フォロー関係を通じて参照→自分がフォローしている人
+  has_many :followings, through: :relationships, source: :followed
 
   validates :name, length: { minimum: 2, maximum: 20 }, uniqueness: true
   validates :introduction, length: { maximum: 50}
@@ -26,14 +27,14 @@ class User < ApplicationRecord
   end
 
   def follow(user)
-    active_relationships.create(followed_id: user.id)
+    relationships.create(followed_id: user.id)
   end
 
   def unfollow(user)
-    active_relationships.find_by(followed_id: user.id)
+    relationships.find_by(followed_id: user.id).destroy
   end
 
-  def following?(usr)
+  def following?(user)
     followings.include?(user)
   end
 end
