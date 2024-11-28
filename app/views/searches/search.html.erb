@@ -1,5 +1,4 @@
-<h2>Books search<h2>
-  <% if @model == "User" %>
+  <% if @model == 'user' %>
   <h2>Users search for "<%= @content %>"</h2>
     <%= render 'users/index', users: @records %>
   <% elsif @model == 'book' %>

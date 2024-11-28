@@ -39,11 +39,11 @@ class User < ApplicationRecord
   end
 
   def self.search_for(content, method)
-    if method == 'perfect_match'
+    if method == 'perfect'
       User.where(name: content)
-    elsif method == 'forward_match'
+    elsif method == 'forward'
       User.where('name LIKE?', content +'%')
-    elsif method == 'backward_match'
+    elsif method == 'backward'
       User.where('name LIKE?', '%' + content)
     else 
       User.where('name LIKE?', '%' + content + '%')
