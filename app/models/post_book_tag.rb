@@ -1,0 +1,2 @@
+class PostBookTag < ApplicationRecord
+end
